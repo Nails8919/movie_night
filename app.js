@@ -6,7 +6,7 @@ import { getMovies } from './readUtil.js'
 const app = express()
 
 app.get('/', (req, res) => {
-  res.send('Hello World Sky <a href="/show">Show Page</a>')
+  res.send('Movie Database <a href="/show">Show Page</a>')
 })
 
 app.get("/show", (req, res) => {
@@ -23,6 +23,10 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`)
 })
 
-app.get("/movies", (req, res) => {
-  getMovies(res)
+app.get("/:type", (req, res) => {
+  let type = req.params.type.toLowerCase()
+  if (type != "movie" && type != "series") {
+    res.status(400).send({"error": "Invalid URI"})
+  }
+  getMovies(res, type)
 })

@@ -1,12 +1,15 @@
+import { format } from "date-and-time"
 import { moviesCollection } from "./mymongo.js"
+import { ObjectId } from "mongodb"
 
 
-const getMovies = (res, type) => {
+const getMovies = (res, type, page = 0) => {
     moviesCollection
         .find({
             type: type
         }, {
             limit: 10,
+            skip: page,
             sort: { year: -1 }
         })
         .project({
@@ -34,4 +37,33 @@ const getMovies = (res, type) => {
         })
 }
 
-export { getMovies }
+//retrieve a single movie by its ID
+const getMovie = (res, movieID) => {
+    moviesCollection
+        .findOne({ _id: new ObjectId(movieID) },
+            {
+                projection: {
+                    fullplot: 1,
+                    imdb: {rating: 1},
+                    year: 1,
+                    genres: 1,
+                    title: 1,
+                    released: 1,
+                    directors: 1,
+                    posters: 1
+                }
+            }
+        )
+        .then(doc => {
+            if (!doc) {
+                doc = { "error": "Movie Not Found" }
+            }
+            if (doc.released) {
+                doc.released = format(doc.released, " MMM DD , YYYY")
+                console.log(doc)
+            }
+            res.status(200).json(doc)
+        })
+}
+
+export { getMovies, getMovie }

@@ -1,7 +1,7 @@
 import { favoritesCollection } from "./mymongo.js"
 
 // Add a movie to the favorites collection
-const addToFavorites = (id) => {
+const addToFavorites = (res, id) => {
     favoritesCollection.insertOne({ showID: id })
         .then(result => {
             if (result.insertedId)

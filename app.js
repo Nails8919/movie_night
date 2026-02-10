@@ -1,6 +1,7 @@
 import express from 'express'
 import { PORT } from './config.js'
 import { getMovie, getMovies } from './readUtil.js'
+import { addToFavorites } from './creatUtil.js'
 
 
 const app = express()
@@ -56,4 +57,14 @@ app.get("/info/:id", (req, res) => {
     return
   }
   getMovie(res, movieID)
+})
+
+app.post("/favorites/add/:id", (req, res) => {
+  let showID = req.params.id
+  if (!showID || showID.length != 24) {
+    res.status(400).send({ "error": "Invalid Movie ID" })
+    return
+  }
+  addToFavorites(res, showID)
+
 })

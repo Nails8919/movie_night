@@ -1,6 +1,6 @@
 import express from 'express'
 import { PORT } from './config.js'
-import { getMovie, getMovies } from './readUtil.js'
+import { getFavorites, getMovie, getMovies } from './readUtil.js'
 import { addToFavorites } from './creatUtil.js'
 
 
@@ -67,4 +67,8 @@ app.post("/favorites/add/:id", (req, res) => {
   }
   addToFavorites(res, showID)
 
+})
+
+app.get("/favorites/show", (req, res) => {
+  getFavorites(res)
 })

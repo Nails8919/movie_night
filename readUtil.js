@@ -30,7 +30,7 @@ const getMovies = (res, type, page = 0) => {
                         let hours = Math.floor(doc.runtime / 60)
                         let minutes = doc.runtime % 60
                         doc.runtime = `${hours} ${hours == 1 ? "hour" : "hours"} ${minutes} ${minutes == 1 ? "min" : "mins"}`
-                    }
+                    } 
                 }
             }
             res.status(200).json(resp)

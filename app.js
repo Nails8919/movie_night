@@ -2,9 +2,15 @@ import express from 'express'
 import { PORT } from './config.js'
 import { getFavorites, getMovie, getMovies } from './readUtil.js'
 import { addToFavorites } from './creatUtil.js'
+import cors from 'cors' 
 
 
+// Create an Express application
 const app = express()
+
+// Middleware to parse JSON bodies and enable CORS
+app.use(express.json()) // Middleware to parse JSON bodies
+app.use(cors()) // Enable CORS for all routes
 
 app.get('/', (req, res) => {
   res.send('Movie Database <a href="/show">Show Page</a>')

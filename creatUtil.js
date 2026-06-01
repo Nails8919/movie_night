@@ -22,4 +22,18 @@ const addToFavorites = (res, id) => {
 
 }
 
-export { addToFavorites }
+
+const deleteFavorite = (res, id) => {
+  favoritesCollection
+    .deleteOne({ _id: new ObjectId(id) })
+    .then(result => {
+      if (result.deletedCount > 0) {
+        res.status(200).json({ msg: "Deleted successfully" })
+      } else {
+        res.status(404).json({ error: "Not found" })
+      }
+    })
+}
+
+
+export { addToFavorites, deleteFavorite }

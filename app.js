@@ -1,7 +1,7 @@
 import express from 'express'
 import { PORT } from './config.js'
 import { getFavorites, getMovie, getMovies } from './readUtil.js'
-import { addToFavorites } from './creatUtil.js'
+import { addToFavorites, deleteFavorite } from './creatUtil.js'
 import cors from 'cors' 
 
 
@@ -77,4 +77,8 @@ app.post("/favorites/add/:id", (req, res) => {
 
 app.get("/favorites/show", (req, res) => {
   getFavorites(res)
+})
+
+app.delete("/favorites/delete/:id", (req, res) => {
+  deleteFavorite(res, req.params.id)
 })

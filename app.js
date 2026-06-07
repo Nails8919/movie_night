@@ -3,6 +3,7 @@ import { PORT } from './config.js'
 import { getFavorites, getMovie, getMovies } from './readUtil.js'
 import { addToFavorites, deleteFavorite } from './creatUtil.js'
 import cors from 'cors' 
+import { updateFavorite } from './readUtil.js'
 
 
 // Create an Express application
@@ -81,4 +82,12 @@ app.get("/favorites/show", (req, res) => {
 
 app.delete("/favorites/delete/:id", (req, res) => {
   deleteFavorite(res, req.params.id)
+})
+
+app.put("/favorites/update/:id", (req, res) => {
+  updateFavorite(
+      res,
+      req.params.id,
+      req.body
+  )
 })

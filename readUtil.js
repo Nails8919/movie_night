@@ -69,13 +69,62 @@ const getMovie = (res, movieID) => {
 //retrieve all movies in the favorites collection
 const getFavorites = (res) => {
     favoritesCollection
-    .find({})
-    .toArray()
-    .then(favoritesDocs => {
-        if (!favoritesDocs)
-            favoritesDocs = { "error": "No Favorites Found" }
-        res.status(200).json(favoritesDocs)
-    })
+        .aggregate([
+            {
+                $lookup: {
+                    from: "movies",
+                    localField: "showID",
+                    foreignField: "_id",
+                    as: "movie"
+                }
+            },
+            {
+                $unwind: "$movie"
+            },
+            {
+                $project: {
+                    showID: 1,
+                    note: 1,
+                    watched: 1,
+                    title: "$movie.title",
+                    year: "$movie.year",
+                    poster: "$movie.poster"
+                }
+            }
+        ])
+        .toArray()
+        .then(results => {
+            res.status(200).json(results)
+        })
+}
+// const getFavorites = (res) => {
+//     favoritesCollection
+//     .find({})
+//     .toArray()
+//     .then(favoritesDocs => {
+//         if (!favoritesDocs)
+//             favoritesDocs = { "error": "No Favorites Found" }
+//         res.status(200).json(favoritesDocs)
+//     })
+// }
+
+const updateFavorite = (res, id, data) => {
+    favoritesCollection
+        .updateOne(
+            { _id: new ObjectId(id) },
+            {
+                $set: {
+                    note: data.note,
+                    watched: data.watched
+                }
+            }
+        )
+        .then(result => {
+            if (result.modifiedCount > 0)
+                res.status(200).json({ msg: "Favorite updated" })
+            else
+                res.status(404).json({ error: "Favorite not found" })
+        })
 }
 
-export { getMovies, getMovie, getFavorites }
+export { getMovies, getMovie, getFavorites, updateFavorite }
